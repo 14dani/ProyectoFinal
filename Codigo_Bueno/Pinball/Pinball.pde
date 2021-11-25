@@ -96,7 +96,7 @@ void setup(){
   
   //flippers
   br = new Bumper(width/2 + 100, height - 50, 25, -QUARTER_PI/2, QUARTER_PI, false, 15, 10, 80);
-  bl = new Bumper(width/2 - 100, height - 50, 25, -QUARTER_PI/2 - radians(15), QUARTER_PI - radians(20), true, 15, 10, 80); //have no idea why they don't match up but this works
+  bl = new Bumper(width/2 - 100, height - 50, 25, -QUARTER_PI/2 - radians(15), QUARTER_PI - radians(20), true, 15, 10, 80); 
   //ft = new Flipper(10, 500, 25, -QUARTER_PI, HALF_PI - QUARTER_PI, true, 10,5,30); 
   //ff = new Flipper(width-60, 500, 25, -QUARTER_PI, HALF_PI - QUARTER_PI, false, 10, 5, 30);
  
@@ -114,7 +114,7 @@ void setup(){
   //SuperficieOrgánica
   arco = new Surface(width/2, height/2-95, width/2, 180, 360);
   arco1 = new Surface(width/2, height/2-95, width/2-30, 280, 360);
-  arcoMedio = new Surface(width/2, height/2+60, 90, 210, 330 );
+  arcoMedio = new Surface(width/2, height/2+90, 110, 230, 320 );
   
   //Superficie salida
   ArrayList<Vec2> puntos = new ArrayList <Vec2>();
@@ -123,10 +123,10 @@ void setup(){
   puntos.add(new Vec2(470, 240));
   salida = new Surface(puntos);
   
-  //ArrayList<Vec2> puntosP = new ArrayList <Vec2>();
-  //puntosP.add(new Vec2(width/2, 0));
-  //puntosP.add(new Vec2(180, 72));
-  //pared = new Surface(puntosP);
+  ArrayList<Vec2> puntosP = new ArrayList <Vec2>();
+  puntosP.add(new Vec2(width/2, 0));
+  puntosP.add(new Vec2(180, 72));
+  pared = new Surface(puntosP);
   
   ArrayList<Vec2> puntosP2 = new ArrayList <Vec2>();
   puntosP2.add(new Vec2(width/2+40, 45));
@@ -150,7 +150,7 @@ void setup(){
   
   //Paredes
   paredes = new ArrayList<Boundary>();
-  paredes.add(new Boundary(width/2,height,width,4)); //pared de abajo
+  //paredes.add(new Boundary(width/2,height,width,4)); //pared de abajo
   //paredes.add(new Boundary(width/2,5,width,5)); //pared de arriba
   paredes.add(new Boundary(width,height/2+220,4,height));//pared de la izquierda
   paredes.add(new Boundary(0,height/2+220,4,height));//pared de la derecha
@@ -236,8 +236,7 @@ void draw(){
     playJ.play();
     //playJ.loop();
    
-    br.display();
-    bl.display(); 
+     
   }
   else if(escenario == 3){
     escenarioFinal();
@@ -263,6 +262,8 @@ void escenarioFinal(){
   textFont(Fpuntos);
   text(puntos, width/2-20, height/2+160);
   
+  
+  
   if(millis() - instant1 > interval1){
     escenario = 1;
     for (Ball plt : pelotas) { 
@@ -281,12 +282,15 @@ void escenarioFinal(){
 void escenarioJuego(){
   escJuego.display();
   
-  arco.display();
-  arco1.display();
-  arcoMedio.display();
-  salida.display();
+  br.display();
+  bl.display();
+  
+  //arco.display();
+  //arco1.display();
+  //arcoMedio.display();
+  //salida.display();
   //pared.display();
-  pared1.display();
+  //pared1.display();
   
   for (Boundary pared : paredes) {  //busca las paredes en el arraylist
     pared.display();
@@ -327,6 +331,9 @@ void escenarioJuego(){
       escenario = 3;
     }
   }
+  
+  lflip = true;
+  rflip = true;
 
 }
 
@@ -470,7 +477,7 @@ void keyPressed(){
     }
   }
   
-  if(keyCode == RIGHT )
+  if(keyCode == RIGHT && rflip )
   {
     br.reverseSpeed();
     //ff.reverseSpeed();
@@ -479,7 +486,7 @@ void keyPressed(){
     rflip = false;
    // fflip = false;
   }
-  if(keyCode == LEFT )
+  if(keyCode == LEFT && lflip)
   {
     bl.reverseSpeed();
     //ft.reverseSpeed();
@@ -497,11 +504,14 @@ void keyReleased(){
       keyUp = millis();
       long difTiempo = keyUp - keyDown;
       float potencia = map(constrain(difTiempo, 0, 7000), 0, 7000, 50, 150);
-      Ball pelota = new Ball(width-15, 389, 10); 
+      Ball pelota = new Ball(width-15, 389, 12.5); 
       pelota.potenciaDisparo(potencia);
       pelotas.add(pelota);
       vidas--;
       GrapHook.trigger();
+    }
+    disparando = false;
+  }
       
   
   if(keyCode == RIGHT && rflip )
@@ -510,18 +520,14 @@ void keyReleased(){
    // ff.reverseSpeed();
     rflip = true;
     //fflip = true;
-
   }
-  if(keyCode == LEFT )
+  
+  if(keyCode == LEFT && lflip )
   {
     bl.reverseSpeed();
     //ft.reverseSpeed();
     lflip = true;
     //tflip = true;
-  }
+  }  
   
-    }
-    disparando = false;
-    //holaa
-  }
 }

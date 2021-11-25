@@ -11,7 +11,7 @@ class Ball{
     float y = y_;
     
     
-    img = loadImage("Pelota.png");
+    img = loadImage("Bolita.png");
     r = img.width / 2;
     
     makeBody(new Vec2(x,y),r);
